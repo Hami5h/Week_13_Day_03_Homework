@@ -79,13 +79,32 @@ const countryView = new CountryView();
 var app = function(){
 const url = "https://restcountries.eu/rest/v2/all";
 makeRequest(url, requestComplete);
+const center = {lat: 0, lng:0}
+const container = document.querySelector('#main-map');
+const mainMap = new MapWrapper(container, center, 5);
+mainMap.whereAmI();
+mainMap.addClickEvent();
 
 const saveCountryButton = document.querySelector('#save-country');
-saveCountryButton.addEventListener('click', saveCountryButtonClicked)
 
+saveCountryButton.addEventListener('click', function(evt) {
+
+  const countryIndex = document.querySelector('#all-countries-list').value;
+  const selectedCountry = countries[countryIndex];
+  const latlng = {lat: selectedCountry.latlng[0], lng: selectedCountry.latlng[1]};
+  const center = latlng;
+  mainMap.addMarker(center, "This is" + " " + selectedCountry.name);
+  mainMap.setCenter(center);
+  request.post(saveCountryRequestComplete, selectedCountry);
+})
 
 const removeCountryButton = document.querySelector('#remove-country');
-removeCountryButton.addEventListener('click', removeCountryButtonClicked)
+removeCountryButton.addEventListener('click', function(evt) {
+  console.log('remove button clicked');
+  request.delete(deleteRequestComplete);
+  mainMap.removeMarkers();
+  mainMap.whereAmI();
+});
 
 }
 
@@ -117,26 +136,8 @@ const populateDropDown = function(country) {
   });
 }
 
-const saveCountryButtonClicked = function(evt) {
-  const countryIndex = document.querySelector('#all-countries-list').value;
-  const selectedCountry = countries[countryIndex];
-  const latlng = {lat: selectedCountry.latlng[0], lng: selectedCountry.latlng[1]};
-  const center = latlng
-    const container = document.querySelector('#main-map');
-    const mainMap = new MapWrapper(container, center, 5);
-    mainMap.addClickEvent();
-    mainMap.addMarker(center, "This is" + " " + selectedCountry.name);
-
-  request.post(saveCountryRequestComplete, selectedCountry);
-}
-
 const saveCountryRequestComplete = function(name) {
   countryView.addCountry(name);
-}
-
-const removeCountryButtonClicked = function(evt) {
-  console.log('remove button clicked');
-  request.delete(deleteRequestComplete);
 }
 
 const deleteRequestComplete = function(){
@@ -344,15 +345,9 @@ MapWrapper.prototype.removeMarkers = function() {
   this.markers = [];
 }
 
-// MapWrapper.prototype.toSelectedCountry = function() {
-//   const country = {
-//     lat: 41.854073,
-//     lng: -87.619392,
-//   }
-//   this.googleMap.setCenter(country);
-//   this.addMarker(country, "This is Chicago");
-//   this.googleMap.setZoom(16);
-// }
+MapWrapper.prototype.setCenter = function(location) {
+  this.googleMap.panTo(location);
+}
 
 MapWrapper.prototype.whereAmI = function() {
   navigator.geolocation.getCurrentPosition(function(position) {
