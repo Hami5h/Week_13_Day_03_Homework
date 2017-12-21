@@ -40,15 +40,15 @@ MapWrapper.prototype.removeMarkers = function() {
   this.markers = [];
 }
 
-MapWrapper.prototype.toSelectedCountry = function() {
-  const country = {
-    lat: 41.854073,
-    lng: -87.619392,
-  }
-  this.googleMap.setCenter(country);
-  this.addMarker(country, "This is Chicago");
-  this.googleMap.setZoom(16);
-}
+// MapWrapper.prototype.toSelectedCountry = function() {
+//   const country = {
+//     lat: 41.854073,
+//     lng: -87.619392,
+//   }
+//   this.googleMap.setCenter(country);
+//   this.addMarker(country, "This is Chicago");
+//   this.googleMap.setZoom(16);
+// }
 
 MapWrapper.prototype.whereAmI = function() {
   navigator.geolocation.getCurrentPosition(function(position) {

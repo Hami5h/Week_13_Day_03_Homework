@@ -56,7 +56,7 @@ const saveCountryButtonClicked = function(evt) {
     const container = document.querySelector('#main-map');
     const mainMap = new MapWrapper(container, center, 5);
     mainMap.addClickEvent();
-    mainMap.addMarker(center, "This is " + selectedCountry.name);
+    mainMap.addMarker(center, "This is" + " " + selectedCountry.name);
 
   request.post(saveCountryRequestComplete, selectedCountry);
 }
@@ -69,6 +69,7 @@ const removeCountryButtonClicked = function(evt) {
   console.log('remove button clicked');
   request.delete(deleteRequestComplete);
 }
+
 const deleteRequestComplete = function(){
   countryView.clear();
 }
